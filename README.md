@@ -350,6 +350,7 @@ RTL_ANALYZE=##        ; Enable pulse stream analysis for decoder ##
 SIGNAL_RSSI           ; Enable collection of per pulse RSSI Values during signal reception for display in signal debug messages
 RF_MODULE_INIT_STATUS ; Display transceiver config during startup
 DISABLERSSITHRESHOLD  ; Disable automatic setting of RSSI_THRESHOLD ( legacy behaviour ), and use MINRSSI ( -82 )
+RSSITHRESHOLD_DEBUG   ; Enable debugging of RSSI threshold setting
 OOK_MODULATION        ; Enable OOK Device Decoders, setting to false enables FSK Device Decoders 
 ```
 

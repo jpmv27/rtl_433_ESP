@@ -547,10 +547,12 @@ void rtl_433_ESP::rtl_433_ReceiverTask(void* pvParameters) {
 
 #ifdef AUTORSSITHRESHOLD
         rssiThreshold = averageRssi + rssiThresholdDelta;
+#ifdef RSSITHRESHOLD_DEBUG
         logprintfLn(LOG_DEBUG,
                     "Average RSSI Signal %d dbm, adjusted RSSI Threshold %d, "
                     "samples %d",
                     averageRssi, rssiThreshold, RSSI_SAMPLES);
+#endif
 #endif
 
         _totalRssi = 0;
@@ -688,11 +690,13 @@ void rtl_433_ESP::setCallback(rtl_433_ESPCallBack callback, char* messageBuffer,
  */
 void rtl_433_ESP::setRSSIThreshold(int newRssi) {
   rssiThresholdDelta = newRssi;
+#ifdef RSSITHRESHOLD_DEBUG
 #ifndef AUTORSSITHRESHOLD
   logprintfLn(LOG_INFO, "RSSI Threshold not available: %d", rssiThresholdDelta);
 #else
   logprintfLn(LOG_INFO, "Setting RSSI Threshold Delta to: %d",
               rssiThresholdDelta);
+#endif
 #endif
 }
 
