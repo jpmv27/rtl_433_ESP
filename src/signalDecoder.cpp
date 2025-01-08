@@ -326,8 +326,18 @@ void rtlSetup() {
 
     // end of fragment
 
-#else
+#elif MY_DEVICES == MY_DEVICES_S3318P
+
       memcpy(&cfg->devices[0], &s3318p, sizeof(r_device));
+
+#elif MY_DEVICES == MY_DEVICES_ECOWITT_INFACTORY_S3318P
+
+      memcpy(&cfg->devices[0], &ecowitt, sizeof(r_device));
+      memcpy(&cfg->devices[1], &infactory, sizeof(r_device));
+      memcpy(&cfg->devices[2], &s3318p, sizeof(r_device));
+
+#else
+#error Unknown MY_DEVICES value
 #endif
 
 #ifdef RTL_FLEX
