@@ -615,6 +615,9 @@ void rtl_433_ESP::rtl_433_ReceiverTask(void* pvParameters) {
               ((signalEnd - signalStart) >
                MINIMUM_SIGNAL_LENGTH)) // Minimum signal length of MINIMUM_SIGNAL_LENGTH MS
           {
+            if (_pulseTrains[_actualPulseTrain].num_pulses > 0) {
+              logprintfLn(LOG_ERR, "Overrunning pulse train buffer");
+            }
             _pulseTrains[_actualPulseTrain].num_pulses = _nrpulses + 1;
             _pulseTrains[_actualPulseTrain].signalDuration =
                 signalEnd - signalStart;
