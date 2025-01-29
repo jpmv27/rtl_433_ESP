@@ -77,7 +77,9 @@
 // #define AUTOOOKFIX true      // Has shown to be problematic
 
 // Pulse train buffer count
+#ifndef RECEIVER_BUFFER_SIZE
 #define RECEIVER_BUFFER_SIZE 2
+#endif
 
 // #define MAXPULSESTREAMLENGTH 750 // Pulse train buffer size
 
