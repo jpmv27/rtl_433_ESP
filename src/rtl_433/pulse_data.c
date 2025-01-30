@@ -75,7 +75,7 @@ static inline void chk_ret(int ret)
 void pulse_data_print_vcd_header(FILE *file, uint32_t sample_rate)
 {
     char time_str[LOCAL_TIME_BUFLEN];
-    char *timescale;
+    char const *timescale;
     if (sample_rate <= 500000)
         timescale = "1 us";
     else
