@@ -333,6 +333,10 @@ public:
 
   static int averageRssi;
 
+  // Error stats
+  static int pulseTrainsOverruns;
+  static int rtl433QueueOverflows;
+
   /**
    * Functions used during testing
    */

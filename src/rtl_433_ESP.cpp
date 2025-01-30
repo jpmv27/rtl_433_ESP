@@ -110,6 +110,8 @@ int signalRatio = 0;
 
 int rtl_433_ESP::averageRssi = 0;
 int rtl_433_ESP::rssiThresholdDelta = RSSI_THRESHOLD;
+int rtl_433_ESP::pulseTrainsOverruns = 0;
+int rtl_433_ESP::rtl433QueueOverflows = 0;
 
 bool rtl_433_ESP::ookModulation = OOK_MODULATION; // Defaults to true
 
@@ -616,6 +618,7 @@ void rtl_433_ESP::rtl_433_ReceiverTask(void* pvParameters) {
                MINIMUM_SIGNAL_LENGTH)) // Minimum signal length of MINIMUM_SIGNAL_LENGTH MS
           {
             if (_pulseTrains[_actualPulseTrain].num_pulses > 0) {
+              pulseTrainsOverruns++;
               logprintfLn(LOG_ERR, "Overrunning pulse train buffer");
             }
             _pulseTrains[_actualPulseTrain].num_pulses = _nrpulses + 1;

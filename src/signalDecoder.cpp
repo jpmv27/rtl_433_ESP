@@ -42,6 +42,10 @@
 #define rtl_433_Decoder_Priority 2
 #define rtl_433_Decoder_Core     1
 
+#ifndef RTL_433_QUEUE_SIZE
+#  define RTL_433_QUEUE_SIZE 5
+#endif
+
 /*----------------------------- rtl_433_ESP Internals -----------------------------*/
 
 int rtlVerbose = 0;
@@ -421,7 +425,7 @@ void rtlSetup() {
 #ifdef MEMORY_DEBUG
     logprintfLn(LOG_DEBUG, "Pre xQueueCreate heap %d", ESP.getFreeHeap());
 #endif
-    rtl_433_Queue = xQueueCreate(5, sizeof(pulse_data_t*));
+    rtl_433_Queue = xQueueCreate(RTL_433_QUEUE_SIZE, sizeof(pulse_data_t*));
 
 #ifdef MEMORY_DEBUG
     logprintfLn(LOG_DEBUG, "Pre xTaskCreatePinnedToCore heap %d",
@@ -580,6 +584,7 @@ void processSignal(pulse_data_t* rtl_pulses) {
   // logprintfLn(LOG_DEBUG, "processSignal() about to place signal on
   // rtl_433_Queue");
   if (xQueueSend(rtl_433_Queue, &rtl_pulses, 0) != pdTRUE) {
+    rtl_433_ESP::rtl433QueueOverflows++;
     logprintfLn(LOG_ERR, "ERROR: rtl_433_Queue full, discarding signal");
     free(rtl_pulses);
   } else {
