@@ -23,6 +23,7 @@
 
 */
 
+#include "elog_logging.h"
 #include "signalDecoder.h"
 
 /*----------------------------- rtl_433_ESP Internals -----------------------------*/
@@ -585,7 +586,8 @@ void processSignal(pulse_data_t* rtl_pulses) {
   // rtl_433_Queue");
   if (xQueueSend(rtl_433_Queue, &rtl_pulses, 0) != pdTRUE) {
     rtl_433_ESP::rtl433QueueOverflows++;
-    logprintfLn(LOG_ERR, "ERROR: rtl_433_Queue full, discarding signal");
+    Logger.error(RTL433_LOGID, "rtl_433_Queue full, discarding signal");
+    //logprintfLn(LOG_ERR, "ERROR: rtl_433_Queue full, discarding signal");
     free(rtl_pulses);
   } else {
     // logprintfLn(LOG_DEBUG, "processSignal() signal placed on rtl_433_Queue");

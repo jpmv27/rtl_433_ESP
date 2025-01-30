@@ -24,6 +24,7 @@
 
 #include <rtl_433_ESP.h>
 
+#include "elog_logging.h"
 #include "receiver.h"
 #include "signalDecoder.h"
 
@@ -136,6 +137,18 @@ rtl_433_ESP::rtl_433_ESP() {
       RECEIVER_BUFFER_SIZE, sizeof(pulse_data_t), MALLOC_CAP_INTERNAL);
 }
 
+void rtl_433_ESP::initLogging() {
+#if RTL433_ELOG_TO_SERIAL
+  // The library's caller is responsible for initializing Serial
+  Logger.registerSerial(RTL433_LOGID, RTL433_LOG_LEVEL_SERIAL, "433");
+#endif
+
+#if RTL433_ELOG_TO_SYSLOG
+  // The library's caller is responsible for calling configureSyslog()
+  Logger.registerSyslog(RTL433_LOGID, RTL433_LOG_LEVEL_SYSLOG, RTL433_SYSLOG_FACILITY, "433");
+#endif
+}
+
 /**
  * @brief Initialize Transceiver and rtl_433 decoders
  * 
@@ -165,7 +178,8 @@ void rtl_433_ESP::initReceiver(byte inputPin, float receiveFrequency) {
 // ESP32 defaults to VSPI, but heltec uses MOSI=27, MISO=19, SCK=5, CS=18
 #if defined(RF_MODULE_SCK) && defined(RF_MODULE_MISO) && defined(RF_MODULE_MOSI) && defined(RF_MODULE_CS)
 #  ifdef RF_MODULE_INIT_STATUS
-  logprintfLn(LOG_INFO, STR_MODULE " SPI Config SCK: %d, MISO: %d, MOSI: %d, CS: %d", RF_MODULE_SCK, RF_MODULE_MISO, RF_MODULE_MOSI, RF_MODULE_CS);
+  //logprintfLn(LOG_INFO, STR_MODULE " SPI Config SCK: %d, MISO: %d, MOSI: %d, CS: %d", RF_MODULE_SCK, RF_MODULE_MISO, RF_MODULE_MOSI, RF_MODULE_CS);
+  Logger.notice(RTL433_LOGID, "SPI Config SCK: %d, MISO: %d, MOSI: %d, CS: %d", RF_MODULE_SCK, RF_MODULE_MISO, RF_MODULE_MOSI, RF_MODULE_CS);
 #  endif
   newSPI.begin(RF_MODULE_SCK, RF_MODULE_MISO, RF_MODULE_MOSI, RF_MODULE_CS);
 #endif
@@ -619,7 +633,8 @@ void rtl_433_ESP::rtl_433_ReceiverTask(void* pvParameters) {
           {
             if (_pulseTrains[_actualPulseTrain].num_pulses > 0) {
               pulseTrainsOverruns++;
-              logprintfLn(LOG_ERR, "Overrunning pulse train buffer");
+              Logger.error(RTL433_LOGID, "Overrunning pulse train buffer");
+              //logprintfLn(LOG_ERR, "Overrunning pulse train buffer");
             }
             _pulseTrains[_actualPulseTrain].num_pulses = _nrpulses + 1;
             _pulseTrains[_actualPulseTrain].signalDuration =
@@ -928,6 +943,7 @@ void rtl_433_ESP::getModuleStatus() {
 #endif
 #if defined(RF_SX1276) || defined(RF_SX1278)
 
+/*
   alogprintfLn(LOG_INFO, "----- SX127x Status -----");
 
   OokFixedThreshold = _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OOK_FIX);
@@ -974,7 +990,54 @@ void rtl_433_ESP::getModuleStatus() {
                _mod->SPIreadRegister(RADIOLIB_SX127X_REG_FDEV_LSB));
  }
   alogprintfLn(LOG_INFO, "----- SX127x Status -----");
+*/
 
+  Logger.notice(RTL433_LOGID, "----- SX127x Status -----");
+
+  OokFixedThreshold = _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OOK_FIX);
+
+  Logger.notice(RTL433_LOGID, "RegOpMode: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OP_MODE));
+  Logger.notice(RTL433_LOGID, "RegPacketConfig1: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_PACKET_CONFIG_2));
+  Logger.notice(RTL433_LOGID, "RegPacketConfig2: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_PACKET_CONFIG_2));
+  Logger.notice(RTL433_LOGID, "RegBitrateMsb: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_BITRATE_MSB));
+  Logger.notice(RTL433_LOGID, "RegBitrateLsb: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_BITRATE_LSB));
+  Logger.notice(RTL433_LOGID, "RegRxBw: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_RX_BW));
+  Logger.notice(RTL433_LOGID, "RegAfcBw: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_AFC_BW));
+                if (ookModulation) {
+  Logger.notice(RTL433_LOGID, "-------------------------");
+  Logger.notice(RTL433_LOGID, "RegOokPeak: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OOK_PEAK));
+  Logger.notice(RTL433_LOGID, "RegOokFix: 0x%.2x", OokFixedThreshold);
+  Logger.notice(RTL433_LOGID, "RegOokAvg: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OOK_AVG));
+                }
+  Logger.notice(RTL433_LOGID, "-------------------------");
+  Logger.notice(RTL433_LOGID, "RegLna: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_LNA));
+  Logger.notice(RTL433_LOGID, "RegRxConfig: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_RX_CONFIG));
+  Logger.notice(RTL433_LOGID, "RegRssiConfig: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_RSSI_CONFIG));
+
+  Logger.notice(RTL433_LOGID, "-------------------------");
+  Logger.notice(RTL433_LOGID, "RegDioMapping1: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_DIO_MAPPING_1));
+
+ if (!ookModulation) {
+  Logger.notice(RTL433_LOGID, "----------- FSK --------------");
+  Logger.notice(RTL433_LOGID, "FDEV_MSB: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_FDEV_MSB));
+  Logger.notice(RTL433_LOGID, "FDEV_LSB: 0x%.2x",
+               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_FDEV_LSB));
+ }
+  Logger.notice(RTL433_LOGID, "----- SX127x Status -----");
 #endif
 }
 

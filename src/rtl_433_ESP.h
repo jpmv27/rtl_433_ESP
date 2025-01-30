@@ -259,6 +259,8 @@ public:
   void setCallback(rtl_433_ESPCallBack callback, char* messageBuffer,
                    int bufferSize);
 
+  void initLogging();
+
   /**
    * Set minimum RSSI value for receiver
    */

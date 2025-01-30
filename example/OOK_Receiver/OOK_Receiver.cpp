@@ -52,6 +52,7 @@ void setup() {
   Log.begin(LOG_LEVEL, &Serial);
   Log.notice(F(" " CR));
   Log.notice(F("****** setup ******" CR));
+  rf.initLogging();
   rf.initReceiver(RF_MODULE_RECEIVER_GPIO, RF_MODULE_FREQUENCY);
   rf.setCallback(rtl_433_Callback, messageBuffer, JSON_MSG_BUFFER);
   rf.enableReceiver();

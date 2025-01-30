@@ -1,0 +1,36 @@
+#ifndef RTL433_ELOG_LOGGING_H
+#define RTL433_ELOG_LOGGING_H
+
+#include <Elog.h>
+
+#ifndef RTL433_LOGID
+#  define RTL433_LOGID 0
+#endif
+
+#ifndef RTL433_ELOG_TO_SERIAL
+#  define RTL433_ELOG_TO_SERIAL false
+#endif
+
+#ifndef RTL433_LOG_LEVEL_SERIAL
+#  define RTL433_LOG_LEVEL_SERIAL ELOG_LEVEL_INFO
+#endif
+
+#ifndef RTL433_ELOG_TO_SYSLOG
+#  define RTL433_ELOG_TO_SYSLOG false
+#endif
+
+#if RTL433_ELOG_TO_SYSLOG
+#  ifndef ELOG_SYSLOG_ENABLE
+#    error ELOG_SYSLOG_ENABLE must be defined
+#  endif
+#endif
+
+#ifndef RTL433_LOG_LEVEL_SYSLOG
+#  define RTL433_LOG_LEVEL_SYSLOG ELOG_LEVEL_WARNING
+#endif
+
+#ifndef RTL433_SYSLOG_FACILITY
+#  define RTL433_SYSLOG_FACILITY ELOG_FAC_USER
+#endif
+
+#endif
