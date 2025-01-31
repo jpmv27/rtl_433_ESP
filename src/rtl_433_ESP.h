@@ -338,6 +338,7 @@ public:
   // Error stats
   static int pulseTrainsOverruns;
   static int rtl433QueueOverflows;
+  static TaskHandle_t rtl_433_ReceiverHandle;
 
   /**
    * Functions used during testing

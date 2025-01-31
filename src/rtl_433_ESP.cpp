@@ -128,7 +128,7 @@ unsigned long _deafWorkaround = millis();
 int16_t rtl_433_ESP::_interrupt = NOT_AN_INTERRUPT;
 static byte receiverGpio = -1;
 
-static TaskHandle_t rtl_433_ReceiverHandle;
+TaskHandle_t rtl_433_ESP::rtl_433_ReceiverHandle;
 
 /*----------------------------- End of variable initialization -----------------------------*/
 
