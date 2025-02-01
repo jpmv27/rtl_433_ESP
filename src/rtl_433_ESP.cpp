@@ -178,7 +178,6 @@ void rtl_433_ESP::initReceiver(byte inputPin, float receiveFrequency) {
 // ESP32 defaults to VSPI, but heltec uses MOSI=27, MISO=19, SCK=5, CS=18
 #if defined(RF_MODULE_SCK) && defined(RF_MODULE_MISO) && defined(RF_MODULE_MOSI) && defined(RF_MODULE_CS)
 #  ifdef RF_MODULE_INIT_STATUS
-  //logprintfLn(LOG_INFO, STR_MODULE " SPI Config SCK: %d, MISO: %d, MOSI: %d, CS: %d", RF_MODULE_SCK, RF_MODULE_MISO, RF_MODULE_MOSI, RF_MODULE_CS);
   Logger.notice(RTL433_LOGID, "SPI Config SCK: %d, MISO: %d, MOSI: %d, CS: %d", RF_MODULE_SCK, RF_MODULE_MISO, RF_MODULE_MOSI, RF_MODULE_CS);
 #  endif
   newSPI.begin(RF_MODULE_SCK, RF_MODULE_MISO, RF_MODULE_MOSI, RF_MODULE_CS);
@@ -943,55 +942,6 @@ void rtl_433_ESP::getModuleStatus() {
   alogprintfLn(LOG_INFO, "----- CC1101 Status -----");
 #endif
 #if defined(RF_SX1276) || defined(RF_SX1278)
-
-/*
-  alogprintfLn(LOG_INFO, "----- SX127x Status -----");
-
-  OokFixedThreshold = _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OOK_FIX);
-
-  alogprintfLn(LOG_INFO, "RegOpMode: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OP_MODE));
-  alogprintfLn(LOG_INFO, "RegPacketConfig1: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_PACKET_CONFIG_2));
-  alogprintfLn(LOG_INFO, "RegPacketConfig2: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_PACKET_CONFIG_2));
-  alogprintfLn(LOG_INFO, "RegBitrateMsb: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_BITRATE_MSB));
-  alogprintfLn(LOG_INFO, "RegBitrateLsb: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_BITRATE_LSB));
-  alogprintfLn(LOG_INFO, "RegRxBw: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_RX_BW));
-  alogprintfLn(LOG_INFO, "RegAfcBw: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_AFC_BW));
-                if (ookModulation) {
-  alogprintfLn(LOG_INFO, "-------------------------");
-  alogprintfLn(LOG_INFO, "RegOokPeak: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OOK_PEAK));
-  alogprintfLn(LOG_INFO, "RegOokFix: 0x%.2x", OokFixedThreshold);
-  alogprintfLn(LOG_INFO, "RegOokAvg: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OOK_AVG));
-                }
-  alogprintfLn(LOG_INFO, "-------------------------");
-  alogprintfLn(LOG_INFO, "RegLna: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_LNA));
-  alogprintfLn(LOG_INFO, "RegRxConfig: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_RX_CONFIG));
-  alogprintfLn(LOG_INFO, "RegRssiConfig: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_RSSI_CONFIG));
-
-  alogprintfLn(LOG_INFO, "-------------------------");
-  alogprintfLn(LOG_INFO, "RegDioMapping1: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_DIO_MAPPING_1));
-
- if (!ookModulation) {
-  alogprintfLn(LOG_INFO, "----------- FSK --------------");
-  alogprintfLn(LOG_INFO, "FDEV_MSB: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_FDEV_MSB));
-  alogprintfLn(LOG_INFO, "FDEV_LSB: 0x%.2x",
-               _mod->SPIreadRegister(RADIOLIB_SX127X_REG_FDEV_LSB));
- }
-  alogprintfLn(LOG_INFO, "----- SX127x Status -----");
-*/
 
   Logger.notice(RTL433_LOGID, "----- SX127x Status -----");
 
