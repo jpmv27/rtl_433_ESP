@@ -354,7 +354,7 @@ void rtl_433_ESP::initReceiver(byte inputPin, float receiveFrequency) {
  * @return int - which pulse train
  */
 int rtl_433_ESP::receivePulseTrain() {
-  if (_pulseTrains[_availablePulseTrain].num_pulses > 0) {
+  if (_availablePulseTrain != _actualPulseTrain && _pulseTrains[_availablePulseTrain].num_pulses > 0) {
     uint8_t _currentTrain = _availablePulseTrain;
     _availablePulseTrain = (_availablePulseTrain + 1) % RECEIVER_BUFFER_SIZE;
     return _currentTrain;
@@ -631,28 +631,29 @@ void rtl_433_ESP::rtl_433_ReceiverTask(void* pvParameters) {
               ((signalEnd - signalStart) >
                MINIMUM_SIGNAL_LENGTH)) // Minimum signal length of MINIMUM_SIGNAL_LENGTH MS
           {
-            if (_pulseTrains[_actualPulseTrain].num_pulses > 0) {
+            uint8_t nextActualPulseTrain = (_actualPulseTrain + 1) % RECEIVER_BUFFER_SIZE;
+            if (nextActualPulseTrain == _availablePulseTrain || _pulseTrains[_actualPulseTrain].num_pulses > 0) {
               pulseTrainsOverruns++;
-              Logger.error(RTL433_LOGID, "Overrunning pulse train buffer");
-              //logprintfLn(LOG_ERR, "Overrunning pulse train buffer");
-            }
-            _pulseTrains[_actualPulseTrain].num_pulses = _nrpulses + 1;
-            _pulseTrains[_actualPulseTrain].signalDuration =
-                signalEnd - signalStart;
-            _pulseTrains[_actualPulseTrain].signalRssi = signalRssi;
+              Logger.error(RTL433_LOGID, "Overrunning pulse train buffer, discarding");
+            } else {
+              _pulseTrains[_actualPulseTrain].num_pulses = _nrpulses + 1;
+              _pulseTrains[_actualPulseTrain].signalDuration =
+                  signalEnd - signalStart;
+              _pulseTrains[_actualPulseTrain].signalRssi = signalRssi;
 #ifdef DEMOD_DEBUG
-            logprintf(LOG_INFO, "Signal length: %lu",
-                      _pulseTrains[_actualPulseTrain].signalDuration);
-            alogprintf(LOG_INFO, ", Gap length: %lu", signalStart - gapStart);
-            alogprintf(LOG_INFO, ", Signal RSSI: %d",
-                       _pulseTrains[_actualPulseTrain].signalRssi);
-            alogprintf(LOG_INFO, ", train: %d", _actualPulseTrain);
-            alogprintf(LOG_INFO, ", messageCount: %d", messageCount);
-            alogprintfLn(LOG_INFO, ", pulses: %d", _nrpulses);
+              logprintf(LOG_INFO, "Signal length: %lu",
+                        _pulseTrains[_actualPulseTrain].signalDuration);
+              alogprintf(LOG_INFO, ", Gap length: %lu", signalStart - gapStart);
+              alogprintf(LOG_INFO, ", Signal RSSI: %d",
+                         _pulseTrains[_actualPulseTrain].signalRssi);
+              alogprintf(LOG_INFO, ", train: %d", _actualPulseTrain);
+              alogprintf(LOG_INFO, ", messageCount: %d", messageCount);
+              alogprintfLn(LOG_INFO, ", pulses: %d", _nrpulses);
 #endif
-            messageCount++;
+              messageCount++;
+              _actualPulseTrain = nextActualPulseTrain;
+            }
             gapStart = micros();
-            _actualPulseTrain = (_actualPulseTrain + 1) % RECEIVER_BUFFER_SIZE;
             _nrpulses = 0;
           } else {
             ignoredSignals++;
