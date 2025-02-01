@@ -95,7 +95,7 @@ int rtl_433_ESP::signalRssi = 0;
 int rtl_433_ESP::rssiThreshold = MINRSSI;
 bool rtl_433_ESP::_enabledReceiver = false;
 volatile uint8_t rtl_433_ESP::_actualPulseTrain = 0;
-uint8_t rtl_433_ESP::_avaiablePulseTrain = 0;
+uint8_t rtl_433_ESP::_availablePulseTrain = 0;
 volatile unsigned long rtl_433_ESP::_lastChange = 0; // Timestamp of previous edge
 int rtl_433_ESP::rtlVerbose = 0;
 volatile int16_t rtl_433_ESP::_nrpulses;
@@ -354,9 +354,9 @@ void rtl_433_ESP::initReceiver(byte inputPin, float receiveFrequency) {
  * @return int - which pulse train
  */
 int rtl_433_ESP::receivePulseTrain() {
-  if (_pulseTrains[_avaiablePulseTrain].num_pulses > 0) {
-    uint8_t _currentTrain = _avaiablePulseTrain;
-    _avaiablePulseTrain = (_avaiablePulseTrain + 1) % RECEIVER_BUFFER_SIZE;
+  if (_pulseTrains[_availablePulseTrain].num_pulses > 0) {
+    uint8_t _currentTrain = _availablePulseTrain;
+    _availablePulseTrain = (_availablePulseTrain + 1) % RECEIVER_BUFFER_SIZE;
     return _currentTrain;
   }
   return -1;
@@ -424,7 +424,7 @@ void rtl_433_ESP::resetReceiver() {
   for (unsigned int i = 0; i < RECEIVER_BUFFER_SIZE; i++) {
     _pulseTrains[i].num_pulses = 0;
   }
-  _avaiablePulseTrain = 0;
+  _availablePulseTrain = 0;
   _actualPulseTrain = 0;
   _nrpulses = 0;
 

@@ -428,7 +428,7 @@ private:
   static bool _enabledReceiver;
   // static volatile pulse_data_t _pulseTrains[];
   static volatile uint8_t _actualPulseTrain;
-  static uint8_t _avaiablePulseTrain;
+  static uint8_t _availablePulseTrain;
   static volatile unsigned long _lastChange;
   static volatile int16_t _nrpulses;
   static int16_t _interrupt;
