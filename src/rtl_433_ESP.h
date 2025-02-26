@@ -50,8 +50,8 @@
 // #define ONBOARD_LED -1
 #endif
 
-#ifndef MINRSSI
-#  define MINRSSI -82 // DB above noise level
+#ifndef RSSI_THRESHOLD
+#  define RSSI_THRESHOLD -82
 #endif
 
 // Workaround for CC1101 transceivers going deaf occasionally
@@ -60,18 +60,22 @@
 #endif
 
 // Number of rssi results to collect for average calculation
-#ifndef RSSI_SAMPLES
-#  define RSSI_SAMPLES 50000
+#ifndef RSSI_AVERAGE_SAMPLES
+#  define RSSI_AVERAGE_SAMPLES 50000
 #endif
 
 //  Amount to add to average RSSI to determine if a signal is present
-#ifndef RSSI_THRESHOLD
-#  define RSSI_THRESHOLD 9
+#ifndef RSSI_THRESHOLD_DELTA
+#  define RSSI_THRESHOLD_DELTA 9
+#endif
+
+#ifndef RSSI_THRESHOLD_DEBUG
+#  define RSSI_THRESHOLD_DEBUG false
 #endif
 
 // Enable setting of RSSI Signal threshold based on backgroup signal level
-#ifndef DISABLERSSITHRESHOLD
-#  define AUTORSSITHRESHOLD true
+#ifndef AUTO_RSSI_THRESHOLD
+#  define AUTO_RSSI_THRESHOLD true
 #endif
 
 // #define AUTOOOKFIX true      // Has shown to be problematic
@@ -265,6 +269,8 @@ public:
    * Set minimum RSSI value for receiver
    */
   void setRSSIThreshold(int);
+
+  void setRSSIThresholdDelta(int);
 
 #if defined(RF_SX1276) || defined(RF_SX1278)
   /**

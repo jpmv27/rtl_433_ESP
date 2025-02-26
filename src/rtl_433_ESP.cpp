@@ -92,7 +92,7 @@ pulse_data_t* _pulseTrains;
 int rtl_433_ESP::messageCount = 0;
 int rtl_433_ESP::currentRssi = 0;
 int rtl_433_ESP::signalRssi = 0;
-int rtl_433_ESP::rssiThreshold = MINRSSI;
+int rtl_433_ESP::rssiThreshold = RSSI_THRESHOLD;
 bool rtl_433_ESP::_enabledReceiver = false;
 volatile uint8_t rtl_433_ESP::_actualPulseTrain = 0;
 uint8_t rtl_433_ESP::_availablePulseTrain = 0;
@@ -110,14 +110,16 @@ int signalRatio = 0;
 // RSSI Threshold and average calculation
 
 int rtl_433_ESP::averageRssi = 0;
-int rtl_433_ESP::rssiThresholdDelta = RSSI_THRESHOLD;
+int rtl_433_ESP::rssiThresholdDelta = RSSI_THRESHOLD_DELTA;
 int rtl_433_ESP::pulseTrainsOverruns = 0;
 int rtl_433_ESP::rtl433QueueOverflows = 0;
 
 bool rtl_433_ESP::ookModulation = OOK_MODULATION; // Defaults to true
 
+#if AUTO_RSSI_THRESHOLD
 int _totalRssi = 0;
 int _rssiCount = 0;
+#endif
 
 int _noiseCount = 0; // Count of ticks while receiver is disabled
 
@@ -553,26 +555,26 @@ void rtl_433_ESP::rtl_433_ReceiverTask(void* pvParameters) {
       // Calculate average RSSI signal level in environment
 
       currentRssi = _getRSSI();
+
+#if AUTO_RSSI_THRESHOLD
       _rssiCount++;
       _totalRssi += currentRssi;
 
-      if (_rssiCount > RSSI_SAMPLES) // Adjust RSSI Signal Threshold
+      if (_rssiCount > RSSI_AVERAGE_SAMPLES) // Adjust RSSI Signal Threshold
       {
         averageRssi = _totalRssi / _rssiCount;
 
-#ifdef AUTORSSITHRESHOLD
         rssiThreshold = averageRssi + rssiThresholdDelta;
-#ifdef RSSITHRESHOLD_DEBUG
+#if RSSI_THRESHOLD_DEBUG
         logprintfLn(LOG_DEBUG,
                     "Average RSSI Signal %d dbm, adjusted RSSI Threshold %d, "
                     "samples %d",
-                    averageRssi, rssiThreshold, RSSI_SAMPLES);
+                    averageRssi, rssiThreshold, RSSI_AVERAGE_SAMPLES);
 #endif
-#endif
-
         _totalRssi = 0;
         _rssiCount = 0;
       }
+#endif
 
       if (currentRssi > rssiThreshold) // A signal is present
       {
@@ -709,18 +711,27 @@ void rtl_433_ESP::setCallback(rtl_433_ESPCallBack callback, char* messageBuffer,
  * 
  * @param newRssi 
  */
-void rtl_433_ESP::setRSSIThreshold(int newRssi) {
-  rssiThresholdDelta = newRssi;
-#ifdef RSSITHRESHOLD_DEBUG
-#ifndef AUTORSSITHRESHOLD
-  logprintfLn(LOG_INFO, "RSSI Threshold not available: %d", rssiThresholdDelta);
+void rtl_433_ESP::setRSSIThresholdDelta(int newRssiThresholdDelta) {
+  rssiThresholdDelta = newRssiThresholdDelta;
+#if RSSI_THRESHOLD_DEBUG
+#if AUTO_RSSI_THRESHOLD
+  logprintfLn(LOG_INFO, "Setting RSSI Threshold Delta to: %d", rssiThresholdDelta);
 #else
-  logprintfLn(LOG_INFO, "Setting RSSI Threshold Delta to: %d",
-              rssiThresholdDelta);
+  logprintfLn(LOG_INFO, "Fixed RSSI Threshold: ignoring new Delta %d", rssiThresholdDelta);
 #endif
 #endif
 }
 
+void rtl_433_ESP::setRSSIThreshold(int newRssiThreshold) {
+  rssiThreshold = newRssiThreshold;
+#if RSSI_THRESHOLD_DEBUG
+#if AUTO_RSSI_THRESHOLD
+  logprintfLn(LOG_INFO, "Auto RSSI Threshold: ignoring new Threshold %d", rssiThreshold);
+#else
+  logprintfLn(LOG_INFO, "Setting RSSI Threshold to: %d", rssiThreshold);
+#endif
+#endif
+}
 /**
  * @brief set OOK Threshold
  * 

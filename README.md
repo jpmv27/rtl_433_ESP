@@ -320,7 +320,7 @@ To determne that a signal is available for reception, the library watches the cu
 
 ## RSSI Threshold Automatic Setting
 
-The RSSI Threshold for signal detection is automatically determined based on the average RSSI signal level received aka RSSI floor level with a delta ( RSSI_THRESHOLD ) added to it.  The average RSSI signal level is calculated over RSSI_SAMPLES.
+The RSSI Threshold for signal detection is automatically determined based on the average RSSI signal level received aka RSSI floor level with a delta ( RSSI_THRESHOLD_DELTA ) added to it.  The average RSSI signal level is calculated over RSSI_AVERAGE_SAMPLES.
 
 ## SX127X OOK RSSI FIXED Threshold
 
@@ -341,16 +341,16 @@ MY_DEVICES            ; Only include my personal subset of devices
 NO_DEAF_WORKAROUND    ; Workaround for issue #16 ( by default the workaround is enabaled )
 PUBLISH_UNPARSED      ; Enable publishing of MQTT messages for unparsed signals, e.g. {model":"unknown","protocol":"signal parsing failed"…
 RAW_SIGNAL_DEBUG      ; display raw received messages
-RSSI_SAMPLES          ; Number of rssi samples to collect for average calculation, defaults to 50,000
-RSSI_THRESHOLD        ; Delta applied to average RSSI value to calculate RSSI Signal Threshold, defaults to 9
+RSSI_AVERAGE_SAMPLES  ; Number of rssi samples to collect for average calculation, defaults to 50,000
+RSSI_THRESHOLD_DELTA  ; Delta applied to average RSSI value to calculate RSSI Signal Threshold, defaults to 9
 RTL_DEBUG             ; Enable RTL_433 device decoder verbose mode for all device decoders ( 0=normal, 1=verbose, 2=verbose decoders, 3=debug decoders, 4=trace decoding. )
 RTL_VERBOSE=##        ; Enable RTL_433 device decoder verbose mode, ## is the decoder # from the appropriate memcpy line in signalDecoder.cpp
 RTL_ANALYZER          ; Enable pulse stream analysis ( note is very resource intensive and will not work with other modules )
 RTL_ANALYZE=##        ; Enable pulse stream analysis for decoder ##
 SIGNAL_RSSI           ; Enable collection of per pulse RSSI Values during signal reception for display in signal debug messages
 RF_MODULE_INIT_STATUS ; Display transceiver config during startup
-DISABLERSSITHRESHOLD  ; Disable automatic setting of RSSI_THRESHOLD ( legacy behaviour ), and use MINRSSI ( -82 )
-RSSITHRESHOLD_DEBUG   ; Enable debugging of RSSI threshold setting
+AUTO_RSSI_THRESHOLD   ; Enable automatic setting of RSSI threshold ( legacy behaviour ). If disabled, uses fixed RSSI_THRESHOLD ( -82 )
+RSSI_THRESHOLD_DEBUG  ; Enable debugging of RSSI threshold setting
 OOK_MODULATION        ; Enable OOK Device Decoders, setting to false enables FSK Device Decoders 
 ```
 
