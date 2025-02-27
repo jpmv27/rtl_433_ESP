@@ -109,7 +109,7 @@ int signalRatio = 0;
 
 // RSSI Threshold and average calculation
 
-int rtl_433_ESP::averageRssi = 0;
+int rtl_433_ESP::averageRssi = RSSI_THRESHOLD - RSSI_THRESHOLD_DELTA;
 int rtl_433_ESP::rssiThresholdDelta = RSSI_THRESHOLD_DELTA;
 int rtl_433_ESP::pulseTrainsOverruns = 0;
 int rtl_433_ESP::rtl433QueueOverflows = 0;
