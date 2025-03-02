@@ -13,6 +13,6 @@
         "espressif32"
     ],
     "dependencies": {
-        "jgromes/RadioLib": "^6.6.0"
+        "jgromes/RadioLib": "^7.1.2"
     }
 }
