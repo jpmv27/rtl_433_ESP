@@ -372,7 +372,7 @@ public:
   static int ignoredSignals;
   static int unparsedSignals;
 
-  static uint8_t OokFixedThreshold;
+  static uint8_t ookFixedThreshold;
 
   /*----------------------------- Future features -----------------------------*/
   /**
