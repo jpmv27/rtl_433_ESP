@@ -584,7 +584,7 @@ void processSignal(pulse_data_t* rtl_pulses) {
   // logprintfLn(LOG_DEBUG, "processSignal() about to place signal on
   // rtl_433_Queue");
   if (xQueueSend(rtl_433_Queue, &rtl_pulses, 0) != pdTRUE) {
-    rtl_433_ESP::rtl433QueueOverflows++;
+    rtl_433_ESP::decoderQueueOverflows++;
     Logger.error(RTL433_LOGID, "rtl_433_Queue full, discarding signal");
     free(rtl_pulses);
   } else {

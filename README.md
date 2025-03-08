@@ -350,7 +350,7 @@ RTL433_SIGNAL_RSSI             ; Enable collection of per pulse RSSI Values duri
 RTL433_RF_MODULE_INIT_STATUS   ; Display transceiver config during startup
 RTL433_RSSI_THRESHOLD          ;
 RTL433_AUTO_RSSI_THRESHOLD=##  ; true/false: Enable automatic setting of RSSI threshold ( legacy behaviour ). If disabled, uses fixed RSSI_THRESHOLD ( -82 )
-RTL433_RSSI_THRESHOLD_DEBUG=## ;  Enable debugging of RSSI threshold setting
+RTL433_RSSI_THRESHOLD_DEBUG=## ; Enable debugging of RSSI threshold setting
 RTL433_OOK_MODULATION          ; Enable OOK Device Decoders, setting to false enables FSK Device Decoders
 ```
 
@@ -365,7 +365,7 @@ RTL433_ONBOARD_LED             ; GPIO pin to toggle during signal reception ( Ty
 ```plaintext
 RTL433_RF_SX1276                 ; Enable support for SX1276 Transceiver
 RTL433_OOK_FIXED_THRESHOLD       ; Initial OOK threshold ( See 2.1.3.2. of datasheet ), defaults to 90
-RTL433_AUTO_OOK_FIXED_THRESHOLD  ; Set to enable automatic setting of RTL433_OOK_FIXED_THRESHOLD based on noise level between signals
+RTL433_AUTO_OOK_FIXED_THRESHOLD  ; true/false: Set to enable automatic setting of RTL433_OOK_FIXED_THRESHOLD based on noise level between signals
 RTL433_OOK_FIXED_THRESHOLD_DEBUG ;
 ```
 
@@ -383,7 +383,7 @@ RTL433_RF_MODULE_DIO1        ; SX1276 DIO1 PIN
 ```plaintext
 RTL433_RF_SX1278                        ; Enable support for SX1276
 RTL433_OOK_FIXED_THRESHOLD       ; Initial OOK threshold ( See 2.1.3.2. of datasheet ), defaults to 90
-RTL433_AUTO_OOK_FIXED_THRESHOLD  ; Set to enable automatic setting of RTL433_OOK_FIXED_THRESHOLD based on noise level between signals
+RTL433_AUTO_OOK_FIXED_THRESHOLD  ; true/false: Set to enable automatic setting of RTL433_OOK_FIXED_THRESHOLD based on noise level between signals
 RTL433_OOK_FIXED_THRESHOLD_DEBUG ;
 ```
 

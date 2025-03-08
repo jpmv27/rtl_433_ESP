@@ -112,7 +112,7 @@ int signalRatio = 0;
 int rtl_433_ESP::averageRssi = RTL433_RSSI_THRESHOLD - RTL433_RSSI_THRESHOLD_DELTA;
 int rtl_433_ESP::rssiThresholdDelta = RTL433_RSSI_THRESHOLD_DELTA;
 int rtl_433_ESP::pulseTrainsOverruns = 0;
-int rtl_433_ESP::rtl433QueueOverflows = 0;
+int rtl_433_ESP::decoderQueueOverflows = 0;
 
 bool rtl_433_ESP::ookModulation = RTL433_OOK_MODULATION; // Defaults to true
 
@@ -512,7 +512,7 @@ void rtl_433_ESP::loop() {
     // Adjust RegOokFix threshold
 
     if ((totalSignals % 100) == 0 && totalSignals != 0) {
-#ifdef RTL433_AUTO_OOK_FIXED_THRESHOLD
+#if RTL433_AUTO_OOK_FIXED_THRESHOLD
 #  if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
       ookFixedThreshold = _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OOK_FIX);
 #    ifdef RTL433_OOK_FIXED_THRESHOLD_DEBUG
@@ -588,7 +588,7 @@ void rtl_433_ESP::rtl_433_ReceiverTask(void* pvParameters) {
           _lastChange = micros();
 
           if (_noiseCount > 100) {
-#ifdef RTL433_AUTO_OOK_FIXED_THRESHOLD
+#if RTL433_AUTO_OOK_FIXED_THRESHOLD
 #  if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
             ookFixedThreshold =
                 _mod->SPIreadRegister(RADIOLIB_SX127X_REG_OOK_FIX);
@@ -712,24 +712,20 @@ void rtl_433_ESP::setCallback(rtl_433_ESPCallBack callback, char* messageBuffer,
  * @param newRssi 
  */
 void rtl_433_ESP::setRSSIThresholdDelta(int newRssiThresholdDelta) {
-  rssiThresholdDelta = newRssiThresholdDelta;
-#if RTL433_RSSI_THRESHOLD_DEBUG
 #if RTL433_AUTO_RSSI_THRESHOLD
-  logprintfLn(LOG_INFO, "Setting RSSI Threshold Delta to: %d", rssiThresholdDelta);
+  Logger.notice(RTL433_LOGID, "Setting rssiThresholdDelta to: %d", rssiThresholdDelta);
+  rssiThresholdDelta = newRssiThresholdDelta;
 #else
-  logprintfLn(LOG_INFO, "Fixed RSSI Threshold: ignoring new Delta %d", rssiThresholdDelta);
-#endif
+  Logger.warning(RTL433_LOGID, "Fixed RSSI Threshold: ignoring new rssiThresholdDelta %d", rssiThresholdDelta);
 #endif
 }
 
 void rtl_433_ESP::setRSSIThreshold(int newRssiThreshold) {
-  rssiThreshold = newRssiThreshold;
-#if RTL433_RSSI_THRESHOLD_DEBUG
 #if RTL433_AUTO_RSSI_THRESHOLD
-  logprintfLn(LOG_INFO, "Auto RSSI Threshold: ignoring new Threshold %d", rssiThreshold);
+  Logger.warning(RTL433_LOGID, "Auto RSSI Threshold: ignoring new rssiThreshold %d", rssiThreshold);
 #else
-  logprintfLn(LOG_INFO, "Setting RSSI Threshold to: %d", rssiThreshold);
-#endif
+  Logger.notice(RTL433_LOGID, "Setting RSSI Threshold to: %d", rssiThreshold);
+  rssiThreshold = newRssiThreshold;
 #endif
 }
 /**
@@ -739,10 +735,8 @@ void rtl_433_ESP::setRSSIThreshold(int newRssiThreshold) {
 #if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
 void rtl_433_ESP::setOOKThreshold(int newOokThreshold) {
   ookFixedThreshold = newOokThreshold;
-#  ifdef RTL433_OOK_FIXED_THRESHOLD_DEBUG
-  logprintfLn(LOG_INFO, "Setting setOokFixedOrFloorThreshold to: %d",
+  Logger.notice(RTL433_LOGID, "Setting setOokFixedOrFloorThreshold to: %d",
               ookFixedThreshold);
-#  endif
 
   int state = radio.setOokFixedOrFloorThreshold(ookFixedThreshold);
   RADIOLIB_STATE(state, "setOokFixedThreshold");
@@ -765,25 +759,37 @@ void rtl_433_ESP::setDebug(int debug) {
  * @param status 
  */
 void rtl_433_ESP::getStatus() {
-  alogprintfLn(LOG_INFO, " ");
-  logprintf(LOG_INFO, "Status Message: Gap length: %lu",
-            signalStart - gapStart);
-  alogprintf(LOG_INFO, ", Modulation: %s", ookModulation ? "OOK" : "FSK");
-  alogprintf(LOG_INFO, ", Signal RSSI: %d", signalRssi);
-  alogprintf(LOG_INFO, ", train: %d", _actualPulseTrain);
-  alogprintf(LOG_INFO, ", messageCount: %d", messageCount);
-  alogprintf(LOG_INFO, ", totalSignals: %d", totalSignals);
-  alogprintf(LOG_INFO, ", signalRatio: %d", signalRatio);
-  alogprintf(LOG_INFO, ", ignoredSignals: %d", ignoredSignals);
-  alogprintf(LOG_INFO, ", unparsedSignals: %d", unparsedSignals);
-  alogprintf(LOG_INFO, ", _enabledReceiver: %d", _enabledReceiver);
-  alogprintf(LOG_INFO, ", receiveMode: %d", receiveMode);
-  alogprintf(LOG_INFO, ", currentRssi: %d", currentRssi);
-  alogprintf(LOG_INFO, ", rssiThreshold: %d", rssiThreshold);
-  alogprintf(LOG_INFO, ", StackHWM: %d", uxTaskGetStackHighWaterMark(NULL));
-  alogprintf(LOG_INFO, ", RTL_HWM: %d", uxTaskGetStackHighWaterMark(rtl_433_ReceiverHandle));
-  alogprintf(LOG_INFO, ", DCD_HWM: %d", uxTaskGetStackHighWaterMark(rtl_433_DecoderHandle));
-  alogprintfLn(LOG_INFO, ", pulses: %d", _nrpulses);
+  Logger.notice(RTL433_LOGID, "*** START RTL_433_ESP STATUS ***");
+  Logger.notice(RTL433_LOGID, "Modulation: %s", ookModulation ? "OOK" : "FSK");
+  Logger.notice(RTL433_LOGID, "RTL433_AUTO_RSSI_THRESHOLD: %d", RTL433_AUTO_RSSI_THRESHOLD);
+#if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
+  Logger.notice(RTL433_LOGID, "RTL433_AUTO_OOK_FIXED_THRESHOLD: %d", RTL433_AUTO_OOK_FIXED_THRESHOLD);
+#endif
+  Logger.notice(RTL433_LOGID, "messageCount: %d", messageCount);
+  Logger.notice(RTL433_LOGID, "totalSignals: %d", totalSignals);
+  Logger.notice(RTL433_LOGID, "signalRatio: %d", signalRatio);
+  Logger.notice(RTL433_LOGID, "ignoredSignals: %d", ignoredSignals);
+  Logger.notice(RTL433_LOGID, "unparsedSignals: %d", unparsedSignals);
+  Logger.notice(RTL433_LOGID, "pulseTrainsOverruns: %d", pulseTrainsOverruns);
+  Logger.notice(RTL433_LOGID, "decoderQueueOverflows: %d", decoderQueueOverflows);
+  Logger.notice(RTL433_LOGID, "currentRssi: %d", currentRssi);
+  Logger.notice(RTL433_LOGID, "rssiThreshold: %d", rssiThreshold);
+  Logger.notice(RTL433_LOGID, "averageRssi: %d", averageRssi);
+  Logger.notice(RTL433_LOGID, "rssiThresholdDelta: %d", rssiThresholdDelta);
+#if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
+  Logger.notice(RTL433_LOGID, "ookFixedThreshold: %d", ookFixedThreshold);
+#endif
+  Logger.notice(RTL433_LOGID, "_enabledReceiver: %d", _enabledReceiver);
+  Logger.notice(RTL433_LOGID, "receiveMode: %d", receiveMode);
+  Logger.notice(RTL433_LOGID, "Gap length: %lu", signalStart - gapStart);
+  Logger.notice(RTL433_LOGID, "signalRssi: %d", signalRssi);
+  Logger.notice(RTL433_LOGID, "_actualPulseTrain: %d", _actualPulseTrain);
+  Logger.notice(RTL433_LOGID, "_nrpulses: %d", _nrpulses);
+  Logger.notice(RTL433_LOGID, "Stack HWM: %d", uxTaskGetStackHighWaterMark(NULL));
+  Logger.notice(RTL433_LOGID, "Receiver HWM: %d", uxTaskGetStackHighWaterMark(rtl_433_ReceiverHandle));
+  Logger.notice(RTL433_LOGID, "Decoder HWM: %d", uxTaskGetStackHighWaterMark(rtl_433_DecoderHandle));
+  Logger.notice(RTL433_LOGID, "*** END RTL_433_ESP STATUS ***");
+
 #ifdef RTL433_RF_MODULE_INIT_STATUS
   getModuleStatus();
 #endif
@@ -792,30 +798,36 @@ void rtl_433_ESP::getStatus() {
 
   /* clang-format off */
   data = data_make(
-                "model",          "", DATA_STRING,  "status",
-                "protocol",       "", DATA_STRING,  "rtl_433_ESP status message",
-                "modulation",     "", DATA_STRING,  ookModulation ? "OOK" : "FSK",
-                "RTLRssi",        "", DATA_INT,     currentRssi,
-                "RTLAVGRssi",     "", DATA_INT,     averageRssi,
-                "RTLRssiThresh",  "", DATA_INT,     rssiThreshold,
-                "signalRssi",     "", DATA_INT,     signalRssi,
-
-#ifdef ZradioSX127x
-               "RTLOOKThresh",    "", DATA_INT,     ookFixedThreshold,
+                "model",                           "", DATA_STRING,  "status",
+                "protocol",                        "", DATA_STRING,  "rtl_433_ESP status message",
+                "Modulation",                      "", DATA_STRING,  ookModulation ? "OOK" : "FSK",
+                "RTL433_AUTO_RSSI_THRESHOLD",      "", DATA_INT,     RTL433_AUTO_RSSI_THRESHOLD,
+#if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
+                "RTL433_AUTO_OOK_FIXED_THRESHOLD", "", DATA_INT,     RTL433_AUTO_OOK_FIXED_THRESHOLD,
 #endif
-
-                "train",          "", DATA_INT, _actualPulseTrain,
-                "RTLCnt",         "", DATA_INT, messageCount,
-                "totalSignals",   "", DATA_INT, totalSignals,
-                "signalRatio",    "", DATA_INT, signalRatio,
-                "ignoredSignals", "", DATA_INT, ignoredSignals,
-                "unparsedSignals", "", DATA_INT, unparsedSignals,
-                "StackHWM",       "", DATA_INT, uxTaskGetStackHighWaterMark(NULL),
-                "RTL_HWM",        "", DATA_INT, uxTaskGetStackHighWaterMark(rtl_433_ReceiverHandle),
-                "DCD_HWM",        "", DATA_INT, uxTaskGetStackHighWaterMark(rtl_433_DecoderHandle),
-                "freeMem",        "", DATA_INT, ESP.getFreeHeap(),
-                "_enabledReceiver", "", DATA_INT, _enabledReceiver,
-                "receiveMode",    "", DATA_INT, receiveMode,
+                "messageCount",                    "", DATA_INT,     messageCount,
+                "totalSignals",                    "", DATA_INT,     totalSignals,
+                "signalRatio",                     "", DATA_INT,     signalRatio,
+                "ignoredSignals",                  "", DATA_INT,     ignoredSignals,
+                "unparsedSignals",                 "", DATA_INT,     unparsedSignals,
+                "pulseTrainsOverruns",             "", DATA_INT,     pulseTrainsOverruns,
+                "decoderQueueOverflows",           "", DATA_INT,     decoderQueueOverflows,
+                "currentRssi",                     "", DATA_INT,     currentRssi,
+                "rssiThreshold",                   "", DATA_INT,     rssiThreshold,
+                "averageRssi",                     "", DATA_INT,     averageRssi,
+                "rssiThresholdDelta",              "", DATA_INT,     rssiThresholdDelta,
+#if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
+                "ookFixedThreshold",               "", DATA_INT,     ookFixedThreshold,
+#endif
+                "_enabledReceiver",                "", DATA_INT,     _enabledReceiver,
+                "receiveMode",                     "", DATA_INT,     receiveMode,
+                "Gap_length",                      "", DATA_INT,     signalStart - gapStart,
+                "signalRssi",                      "", DATA_INT,     signalRssi,
+                "_actualPulseTrain",               "", DATA_INT,     _actualPulseTrain,
+                "_nrpulses",                       "", DATA_INT,     _nrpulses,
+                "Stack_HWM",                       "", DATA_INT, uxTaskGetStackHighWaterMark(NULL),
+                "Receiver_HWM",                    "", DATA_INT, uxTaskGetStackHighWaterMark(rtl_433_ReceiverHandle),
+                "Decoder_HWM",                     "", DATA_INT, uxTaskGetStackHighWaterMark(rtl_433_DecoderHandle),
                 NULL);
 
   data_print_jsons(data, _messageBuffer, _bufferSize);

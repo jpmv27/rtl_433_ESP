@@ -78,7 +78,9 @@
 #  define RTL433_AUTO_RSSI_THRESHOLD true
 #endif
 
-// #define RTL433_AUTO_OOK_FIXED_THRESHOLD true      // Has shown to be problematic
+#ifndef RTL433_AUTO_OOK_FIXED_THRESHOLD
+#  define RTL433_AUTO_OOK_FIXED_THRESHOLD false      // Has shown to be problematic
+#endif
 
 // Pulse train buffer count
 #ifndef RTL433_RECEIVER_BUFFER_SIZE
@@ -343,7 +345,7 @@ public:
 
   // Error stats
   static int pulseTrainsOverruns;
-  static int rtl433QueueOverflows;
+  static int decoderQueueOverflows;
   static TaskHandle_t rtl_433_ReceiverHandle;
 
   /**
