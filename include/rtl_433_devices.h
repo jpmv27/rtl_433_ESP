@@ -8,10 +8,10 @@
 #include "r_device.h"
 
 // Pre-defined subsets of devices
-#define MY_DEVICES_S3318P                   1
-#define MY_DEVICES_ECOWITT_INFACTORY_S3318P 2
+#define RTL433_MY_DEVICES_S3318P                   1
+#define RTL433_MY_DEVICES_ECOWITT_INFACTORY_S3318P 2
 
-#ifndef MY_DEVICES
+#ifndef RTL433_MY_DEVICES
 #  define DEVICES                    \
     DECL(abmt)                       \
     DECL(acurite_rain_896)           \
@@ -255,7 +255,7 @@
 #  define NUMOF_FSK_DEVICES 80
 /* Add new decoders here. */
 
-#elif MY_DEVICES == MY_DEVICES_S3318P
+#elif RTL433_MY_DEVICES == RTL433_MY_DEVICES_S3318P
 
 /**
  * Subset of devices that I have access to and have tested with
@@ -266,7 +266,7 @@
 #  define NUMOF_OOK_DEVICES 1
 #  define NUMOF_FSK_DEVICES 0
 
-#elif MY_DEVICES == MY_DEVICES_ECOWITT_INFACTORY_S3318P
+#elif RTL433_MY_DEVICES == RTL433_MY_DEVICES_ECOWITT_INFACTORY_S3318P
 
 #  define DEVICES         \
     DECL(ecowitt)                    \
@@ -277,7 +277,7 @@
 #  define NUMOF_FSK_DEVICES 0
 
 #else
-#error Unknown MY_DEVICES value
+#error Unknown RTL433_MY_DEVICES value
 #endif
 
 #define DECL(name) extern r_device name;

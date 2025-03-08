@@ -53,7 +53,7 @@ void setup() {
   Log.notice(F(" " CR));
   Log.notice(F("****** setup ******" CR));
   rf.initLogging();
-  rf.initReceiver(RF_MODULE_RECEIVER_GPIO, RF_MODULE_FREQUENCY);
+  rf.initReceiver(RTL433_RF_MODULE_RECEIVER_GPIO, RF_MODULE_FREQUENCY);
   rf.setCallback(rtl_433_Callback, messageBuffer, JSON_MSG_BUFFER);
   rf.enableReceiver();
   Log.notice(F("****** setup complete ******" CR));
@@ -92,7 +92,7 @@ int next = uptime() + 30;
 #  elif defined(setRxBW)
 #    define TEST "setRxBandwidth"
 
-#    ifdef defined(RF_SX1276) || defined(RF_SX1278)
+#    ifdef defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
 #      define STEP    5
 #      define stepMin 5
 #      define stepMax 250

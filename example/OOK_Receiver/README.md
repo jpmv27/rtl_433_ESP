@@ -18,10 +18,10 @@ To build and deploy the sample I used Visual Studio Code and PlatformIO.  This d
 
 | CC1101 PIN | ESP32 GPIO | Compiler Definition | Notes |
 | ---------- | ---------- | ------------------- | ----- |
-| N/A | 2 | ONBOARD_LED | My ESP32 board had this prewired |
-| GDO0 | 22 | RF_MODULE_GDO0 | |
-| GDO2 | 4 | RF_MODULE_GDO2 | |
-| CSN | 5 | RF_MODULE_CS | This is the default SPI CS connection |
+| N/A | 2 | RTL433_ONBOARD_LED | My ESP32 board had this prewired |
+| GDO0 | 22 | RTL433_RF_MODULE_GDO0 | |
+| GDO2 | 4 | RTL433_RF_MODULE_GDO2 | |
+| CSN | 5 | RTL433_RF_MODULE_CS | This is the default SPI CS connection |
 | MOSI | 23 | N/A | This is the default SPI MOSI connection |
 | MISO | 19 | N/A | This is the default SPI MISO connection |
 | SCK | 18 | N/A | This is the default SPI SCK connection |
@@ -34,15 +34,15 @@ For reference I found that the board had the following connections
 
 | SX127X (Heltec) PIN | ESP32 GPIO | Compiler Definition | Notes |
 | ---------- | ---------- | ------------------- | ----- |
-| N/A | 25 | ONBOARD_LED | |
-| DIO0 | 26 | RF_MODULE_DIO0 | |
-| DIO1 | 35 | RF_MODULE_DIO1 | |
-| DIO2 | 34 | RF_MODULE_DIO2 | |
-| RST | 14 | RF_MODULE_RST | |
-| CS | 18 | RF_MODULE_CS | |
-| MOSI | 27 | RF_MODULE_MOSI | |
-| MISO | 19 | RF_MODULE_MISO | |
-| SCK | 5 | RF_MODULE_SCK | |
+| N/A | 25 | RTL433_ONBOARD_LED | |
+| DIO0 | 26 | RTL433_RF_MODULE_DIO0 | |
+| DIO1 | 35 | RTL433_RF_MODULE_DIO1 | |
+| DIO2 | 34 | RTL433_RF_MODULE_DIO2 | |
+| RST | 14 | RTL433_RF_MODULE_RST | |
+| CS | 18 | RTL433_RF_MODULE_CS | |
+| MOSI | 27 | RTL433_RF_MODULE_MOSI | |
+| MISO | 19 | RTL433_RF_MODULE_MISO | |
+| SCK | 5 | RTL433_RF_MODULE_SCK | |
 
 ## SX127X (AI Thinker Ra01) Transceiver Module
 
@@ -52,15 +52,15 @@ For reference I used the following connections
 
 | SX127X (Ra01) PIN | ESP32 GPIO | Compiler Definition | Notes |
 | ---------- | ---------- | ------------------- | ----- |
-| N/A | 2 | ONBOARD_LED | |
-| DIO0 | 15 | RF_MODULE_DIO0 | |
-| DIO1 | 4 | RF_MODULE_DIO1 | |
-| DIO2 | 16 | RF_MODULE_DIO2 | |
-| RST | 17 | RF_MODULE_RST | |
-| CS | 5 | RF_MODULE_CS | |
-| MOSI | 23 | RF_MODULE_MOSI | |
-| MISO | 19 | RF_MODULE_MISO | |
-| SCK | 18 | RF_MODULE_SCK | |
+| N/A | 2 | RTL433_ONBOARD_LED | |
+| DIO0 | 15 | RTL433_RF_MODULE_DIO0 | |
+| DIO1 | 4 | RTL433_RF_MODULE_DIO1 | |
+| DIO2 | 16 | RTL433_RF_MODULE_DIO2 | |
+| RST | 17 | RTL433_RF_MODULE_RST | |
+| CS | 5 | RTL433_RF_MODULE_CS | |
+| MOSI | 23 | RTL433_RF_MODULE_MOSI | |
+| MISO | 19 | RTL433_RF_MODULE_MISO | |
+| SCK | 18 | RTL433_RF_MODULE_SCK | |
 
 ## SX127X (LilyGo) Transceiver Module
 

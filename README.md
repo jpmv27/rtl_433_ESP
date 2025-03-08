@@ -320,7 +320,7 @@ To determne that a signal is available for reception, the library watches the cu
 
 ## RSSI Threshold Automatic Setting
 
-The RSSI Threshold for signal detection is automatically determined based on the average RSSI signal level received aka RSSI floor level with a delta ( RSSI_THRESHOLD_DELTA ) added to it.  The average RSSI signal level is calculated over RSSI_AVERAGE_SAMPLES.
+The RSSI Threshold for signal detection is automatically determined based on the average RSSI signal level received aka RSSI floor level with a delta ( RTL433_RSSI_THRESHOLD_DELTA ) added to it.  The average RSSI signal level is calculated over RTL433_RSSI_AVERAGE_SAMPLES.
 
 ## SX127X OOK RSSI FIXED Threshold
 
@@ -333,80 +333,82 @@ The first approach is what is recommended in the SX127X datasheet, and the secon
 # Compile definition options
 
 ```plaintext
-DEMOD_DEBUG           ; enable verbose debugging of signal processing
-DEVICE_DEBUG          ; Validate fields are mapped to response object ( rtl_433 )
-MEMORY_DEBUG          ; display heap usage information
-RESOURCE_DEBUG        : Monitor HEAP and STACK usage and report large jumps
-MY_DEVICES            ; Only include my personal subset of devices
-NO_DEAF_WORKAROUND    ; Workaround for issue #16 ( by default the workaround is enabaled )
-PUBLISH_UNPARSED      ; Enable publishing of MQTT messages for unparsed signals, e.g. {model":"unknown","protocol":"signal parsing failed"…
-RAW_SIGNAL_DEBUG      ; display raw received messages
-RSSI_AVERAGE_SAMPLES  ; Number of rssi samples to collect for average calculation, defaults to 50,000
-RSSI_THRESHOLD_DELTA  ; Delta applied to average RSSI value to calculate RSSI Signal Threshold, defaults to 9
-RTL_DEBUG             ; Enable RTL_433 device decoder verbose mode for all device decoders ( 0=normal, 1=verbose, 2=verbose decoders, 3=debug decoders, 4=trace decoding. )
-RTL_VERBOSE=##        ; Enable RTL_433 device decoder verbose mode, ## is the decoder # from the appropriate memcpy line in signalDecoder.cpp
-RTL_ANALYZER          ; Enable pulse stream analysis ( note is very resource intensive and will not work with other modules )
-RTL_ANALYZE=##        ; Enable pulse stream analysis for decoder ##
-SIGNAL_RSSI           ; Enable collection of per pulse RSSI Values during signal reception for display in signal debug messages
-RF_MODULE_INIT_STATUS ; Display transceiver config during startup
-AUTO_RSSI_THRESHOLD   ; Enable automatic setting of RSSI threshold ( legacy behaviour ). If disabled, uses fixed RSSI_THRESHOLD ( -82 )
-RSSI_THRESHOLD_DEBUG  ; Enable debugging of RSSI threshold setting
-OOK_MODULATION        ; Enable OOK Device Decoders, setting to false enables FSK Device Decoders 
+RTL433_DEMOD_DEBUG             ; enable verbose debugging of signal processing
+RTL433_MEMORY_DEBUG            ; display heap usage information
+RTL433_RESOURCE_DEBUG          ; Monitor HEAP and STACK usage and report large jumps
+RTL433_MY_DEVICES=##           ; Only include my personal subset of devices (from pre-defined subsets)
+RTL433_DEAF_WORKAROUND=##      ; true/false: Workaround for issue #16 ( by default the workaround is enabled)
+RTL433_PUBLISH_UNPARSED        ; Enable publishing of MQTT messages for unparsed signals, e.g. {model":"unknown","protocol":"signal parsing failed"…
+RTL433_RAW_SIGNAL_DEBUG        ; display raw received messages
+RTL433_RSSI_AVERAGE_SAMPLES    ; Number of rssi samples to collect for average calculation, defaults to 50,000
+RTL433_RSSI_THRESHOLD_DELTA    ; Delta applied to average RSSI value to calculate RSSI Signal Threshold, defaults to 9
+RTL433_ALL_DECODER_VERBOSE     ; Enable RTL_433 device decoder verbose mode for all device decoders ( 0=normal, 1=verbose, 2=verbose decoders, 3=debug decoders, 4=trace decoding. )
+RTL433_DECODER_VERBOSE=##      ; Enable RTL_433 device decoder verbose mode, ## is the decoder # from the appropriate memcpy line in signalDecoder.cpp
+RTL433_ALL_DECODER_ANALYZE     ; Enable pulse stream analysis ( note is very resource intensive and will not work with other modules )
+RTL433_DECODER_ANALYZE=##      ; Enable pulse stream analysis for decoder ##
+RTL433_SIGNAL_RSSI             ; Enable collection of per pulse RSSI Values during signal reception for display in signal debug messages
+RTL433_RF_MODULE_INIT_STATUS   ; Display transceiver config during startup
+RTL433_RSSI_THRESHOLD          ;
+RTL433_AUTO_RSSI_THRESHOLD=##  ; true/false: Enable automatic setting of RSSI threshold ( legacy behaviour ). If disabled, uses fixed RSSI_THRESHOLD ( -82 )
+RTL433_RSSI_THRESHOLD_DEBUG=## ;  Enable debugging of RSSI threshold setting
+RTL433_OOK_MODULATION          ; Enable OOK Device Decoders, setting to false enables FSK Device Decoders
 ```
 
 ## RF Module Wiring
 
 ```plaintext
-ONBOARD_LED           ; GPIO pin to toggle during signal reception ( Typically onboard LED )
+RTL433_ONBOARD_LED             ; GPIO pin to toggle during signal reception ( Typically onboard LED )
 ```
 
 ### SX1276 Module Options
 
 ```plaintext
-RF_SX1276             ; Enable support for SX1276 Transceiver
-OOK_FIXED_THRESHOLD   ; Initial OOK threshold ( See 2.1.3.2. of datasheet ), defaults to 90
-AUTOOOKFIX            ; Set to enable automatic setting of OOK_FIXED_THRESHOLD based on noise level between signals
+RTL433_RF_SX1276                 ; Enable support for SX1276 Transceiver
+RTL433_OOK_FIXED_THRESHOLD       ; Initial OOK threshold ( See 2.1.3.2. of datasheet ), defaults to 90
+RTL433_AUTO_OOK_FIXED_THRESHOLD  ; Set to enable automatic setting of RTL433_OOK_FIXED_THRESHOLD based on noise level between signals
+RTL433_OOK_FIXED_THRESHOLD_DEBUG ;
 ```
 
 ### SX1276 Module Wiring ( Required if not using standard configuration )
 
 ```plaintext
-RF_MODULE_CS          ; SX1276 SPI Chip select
-RF_MODULE_DIO0        ; SX1276 DIO0 PIN
-RF_MODULE_RST         ; SX1276 RST PIN
-RF_MODULE_DIO1        ; SX1276 DIO1 PIN
+RTL433_RF_MODULE_CS          ; SX1276 SPI Chip select
+RTL433_RF_MODULE_DIO0        ; SX1276 DIO0 PIN
+RTL433_RF_MODULE_RST         ; SX1276 RST PIN
+RTL433_RF_MODULE_DIO1        ; SX1276 DIO1 PIN
 ```
 
 ### SX1278 Module Options
 
 ```plaintext
-RF_SX1278 - Enable support for SX1276
-OOK_FIXED_THRESHOLD   ; Initial OOK threshold ( See 2.1.3.2. of datasheet ), defaults to 90
-AUTOOOKFIX            ; Set to enable automatic setting of OOK_FIXED_THRESHOLD based on noise level between signals
+RTL433_RF_SX1278                        ; Enable support for SX1276
+RTL433_OOK_FIXED_THRESHOLD       ; Initial OOK threshold ( See 2.1.3.2. of datasheet ), defaults to 90
+RTL433_AUTO_OOK_FIXED_THRESHOLD  ; Set to enable automatic setting of RTL433_OOK_FIXED_THRESHOLD based on noise level between signals
+RTL433_OOK_FIXED_THRESHOLD_DEBUG ;
 ```
 
 ### SX1278 Module Wiring ( Required if not using standard configuration )
 
 ```plaintext
-RF_MODULE_CS          ; SX1278 SPI Chip select
-RF_MODULE_DIO0        ; SX1278 DIO0 PIN
-RF_MODULE_RST         ; SX1278 RST PIN
-RF_MODULE_DIO1        ; SX1278 DIO1 PIN
+RTL433_RF_MODULE_CS          ; SX1278 SPI Chip select
+RTL433_RF_MODULE_DIO0        ; SX1278 DIO0 PIN
+RTL433_RF_MODULE_RST         ; SX1278 RST PIN
+RTL433_RF_MODULE_DIO1        ; SX1278 DIO1 PIN
 ```
 
 ### CC1101 Module Options
 
 ```plaintext
-RF_CC1101             ; Enable support for CC1101 Transceiver
-NO_DEAF_WORKAROUND    ; Workaround for issue #16 ( by default the workaround is enabaled )
+RTL433_RF_CC1101          ; Enable support for CC1101 Transceiver
+RTL433_DEAF_WORKAROUND=## ; true/false: Workaround for issue #16 ( by default the workaround is enabled)
 ```
 
 ### CC1101 Module Wiring
 
 ```plaintext
-RF_MODULE_CS          ; CC1101 SPI Chip select
-RF_MODULE_GDO0        ; CC1101 GDOO PIN
-RF_MODULE_GDO2        ; CC1101 GDO2 PIN
+RTL433_RF_MODULE_CS          ; CC1101 SPI Chip select
+RTL433_RF_MODULE_GDO0        ; CC1101 GDOO PIN
+RTL433_RF_MODULE_GDO2        ; CC1101 GDO2 PIN
 ```
 
 ## RF Module SPI Wiring ( Required if not using standard configuration )
@@ -414,10 +416,10 @@ RF_MODULE_GDO2        ; CC1101 GDO2 PIN
 When using a non standard SPI configuration ( Standard config is SCK - 18, MISO - 19, MOSI - 23, CS - 5)
 
 ```plaintext
-RF_MODULE_SCK         ; SPI Clock
-RF_MODULE_MISO        ; SPI Serial Output
-RF_MODULE_MOSI        ; SPI Serial Input
-RF_MODULE_CS          ; SPI Chip select
+RTL433_RF_MODULE_SCK         ; SPI Clock
+RTL433_RF_MODULE_MISO        ; SPI Serial Output
+RTL433_RF_MODULE_MOSI        ; SPI Serial Input
+RTL433_RF_MODULE_CS          ; SPI Chip select
 ```
 
 ## Porting approach

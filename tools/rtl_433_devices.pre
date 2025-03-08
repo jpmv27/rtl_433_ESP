@@ -7,5 +7,5 @@
 
 #include "r_device.h"
 
-#ifndef MY_DEVICES
+#ifndef RTL433_MY_DEVICES
 #define DEVICES                    \

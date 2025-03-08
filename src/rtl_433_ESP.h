@@ -46,55 +46,55 @@
 
 /*----------------------------- Optional Compiler Definitions -----------------------------*/
 
-#ifndef ONBOARD_LED
-// #define ONBOARD_LED -1
+#ifndef RTL433_ONBOARD_LED
+// #define RTL433_ONBOARD_LED -1
 #endif
 
-#ifndef RSSI_THRESHOLD
-#  define RSSI_THRESHOLD -82
+#ifndef RTL433_RSSI_THRESHOLD
+#  define RTL433_RSSI_THRESHOLD -82
 #endif
 
 // Workaround for CC1101 transceivers going deaf occasionally
-#ifndef NO_DEAF_WORKAROUND
-#  define DEAF_WORKAROUND
+#ifndef RTL433_DEAF_WORKAROUND
+#  define RTL433_DEAF_WORKAROUND true
 #endif
 
 // Number of rssi results to collect for average calculation
-#ifndef RSSI_AVERAGE_SAMPLES
-#  define RSSI_AVERAGE_SAMPLES 50000
+#ifndef RTL433_RSSI_AVERAGE_SAMPLES
+#  define RTL433_RSSI_AVERAGE_SAMPLES 50000
 #endif
 
 //  Amount to add to average RSSI to determine if a signal is present
-#ifndef RSSI_THRESHOLD_DELTA
-#  define RSSI_THRESHOLD_DELTA 9
+#ifndef RTL433_RSSI_THRESHOLD_DELTA
+#  define RTL433_RSSI_THRESHOLD_DELTA 9
 #endif
 
-#ifndef RSSI_THRESHOLD_DEBUG
-#  define RSSI_THRESHOLD_DEBUG false
+#ifndef RTL433_RSSI_THRESHOLD_DEBUG
+#  define RTL433_RSSI_THRESHOLD_DEBUG false
 #endif
 
 // Enable setting of RSSI Signal threshold based on backgroup signal level
-#ifndef AUTO_RSSI_THRESHOLD
-#  define AUTO_RSSI_THRESHOLD true
+#ifndef RTL433_AUTO_RSSI_THRESHOLD
+#  define RTL433_AUTO_RSSI_THRESHOLD true
 #endif
 
-// #define AUTOOOKFIX true      // Has shown to be problematic
+// #define RTL433_AUTO_OOK_FIXED_THRESHOLD true      // Has shown to be problematic
 
 // Pulse train buffer count
-#ifndef RECEIVER_BUFFER_SIZE
-#define RECEIVER_BUFFER_SIZE 2
+#ifndef RTL433_RECEIVER_BUFFER_SIZE
+#define RTL433_RECEIVER_BUFFER_SIZE 2
 #endif
 
 // #define MAXPULSESTREAMLENGTH 750 // Pulse train buffer size
 
 // Set to false to enable FSK demodulators ( Experimental )
-#ifndef OOK_MODULATION
-#  define OOK_MODULATION true
+#ifndef RTL433_OOK_MODULATION
+#  define RTL433_OOK_MODULATION true
 #endif
 
 // signals shorter than this are ignored in interrupt handler
 
-#if OOK_MODULATION
+#if RTL433_OOK_MODULATION
 #  define MINIMUM_PULSE_LENGTH  50
 #  define MINIMUM_SIGNAL_LENGTH 40000
 #else
@@ -103,8 +103,8 @@
 #endif
 
 // SX127X OOK Reception Floor
-#ifndef OOK_FIXED_THRESHOLD
-#  define OOK_FIXED_THRESHOLD 15 // Default value after a bit of experimentation
+#ifndef RTL433_OOK_FIXED_THRESHOLD
+#  define RTL433_OOK_FIXED_THRESHOLD 15 // Default value after a bit of experimentation
 #endif
 
 #ifndef SX127X_RXBANDWIDTH
@@ -117,94 +117,94 @@
 // ~/.platformio/packages/framework-arduinoespressif32/variants/.../pins_arduino.h
 
 #if defined(WIFI_LoRa_32_V2) || defined(WIFI_LoRa_32) // Heltec ESP32 Lora Board or heltec_wifi_lora_32
-#  ifndef RF_SX1278
-#    define RF_SX1276 "SX1276"
+#  ifndef RTL433_RF_SX1278
+#    define RTL433_RF_SX1276 "SX1276"
 #  endif
-#  ifndef RF_MODULE_DIO0
-#    define RF_MODULE_DIO0 DIO0
+#  ifndef RTL433_RF_MODULE_DIO0
+#    define RTL433_RF_MODULE_DIO0 DIO0
 #  endif
-#  ifndef RF_MODULE_DIO1
-#    define RF_MODULE_DIO1 DIO1
+#  ifndef RTL433_RF_MODULE_DIO1
+#    define RTL433_RF_MODULE_DIO1 DIO1
 #  endif
-#  ifndef RF_MODULE_DIO2
-#    define RF_MODULE_DIO2 DIO2
+#  ifndef RTL433_RF_MODULE_DIO2
+#    define RTL433_RF_MODULE_DIO2 DIO2
 #  endif
-#  ifndef RF_MODULE_RST
-#    define RF_MODULE_RST RST_LoRa
+#  ifndef RTL433_RF_MODULE_RST
+#    define RTL433_RF_MODULE_RST RST_LoRa
 #  endif
-#  ifndef RF_MODULE_CS
-#    define RF_MODULE_CS SS
+#  ifndef RTL433_RF_MODULE_CS
+#    define RTL433_RF_MODULE_CS SS
 #  endif
 #endif
 
 #if defined(ARDUINO_TTGO_LoRa32_v21new) // LILYGO® Disaster-Radio LoRa V2.1_1.6.1
-#  ifndef RF_SX1278
-#    define RF_SX1276 "SX1276"
+#  ifndef RTL433_RF_SX1278
+#    define RTL433_RF_SX1276 "SX1276"
 #  endif
-#  ifndef RF_MODULE_DIO0
-#    define RF_MODULE_DIO0 LORA_IRQ
+#  ifndef RTL433_RF_MODULE_DIO0
+#    define RTL433_RF_MODULE_DIO0 LORA_IRQ
 #  endif
-#  ifndef RF_MODULE_DIO1
-#    define RF_MODULE_DIO1 LORA_D1
+#  ifndef RTL433_RF_MODULE_DIO1
+#    define RTL433_RF_MODULE_DIO1 LORA_D1
 #  endif
-#  ifndef RF_MODULE_DIO2
-#    define RF_MODULE_DIO2 LORA_D2
+#  ifndef RTL433_RF_MODULE_DIO2
+#    define RTL433_RF_MODULE_DIO2 LORA_D2
 #  endif
-#  ifndef RF_MODULE_RST
-#    define RF_MODULE_RST LORA_RST
+#  ifndef RTL433_RF_MODULE_RST
+#    define RTL433_RF_MODULE_RST LORA_RST
 #  endif
-#  ifndef RF_MODULE_CS
-#    define RF_MODULE_CS LORA_CS
+#  ifndef RTL433_RF_MODULE_CS
+#    define RTL433_RF_MODULE_CS LORA_CS
 #  endif
 #endif
 
-#ifdef RF_SX1276
-#  define RF_MODULE_RECEIVER_GPIO RF_MODULE_DIO2
+#ifdef RTL433_RF_SX1276
+#  define RTL433_RF_MODULE_RECEIVER_GPIO RTL433_RF_MODULE_DIO2
 #  define STR_MODULE              "SX1276"
-#  if defined(RF_MODULE_SCK) && defined(RF_MODULE_MISO) && \
-      defined(RF_MODULE_MOSI) && defined(RF_MODULE_CS)
+#  if defined(RTL433_RF_MODULE_SCK) && defined(RTL433_RF_MODULE_MISO) && \
+      defined(RTL433_RF_MODULE_MOSI) && defined(RTL433_RF_MODULE_CS)
 #    define RADIO_LIB_MODULE                                                  \
-      new Module(RF_MODULE_CS, RF_MODULE_DIO0, RF_MODULE_RST, RF_MODULE_DIO1, \
+      new Module(RTL433_RF_MODULE_CS, RTL433_RF_MODULE_DIO0, RTL433_RF_MODULE_RST, RTL433_RF_MODULE_DIO1, \
                  newSPI)
 #  else
 #    define RADIO_LIB_MODULE \
-      new Module(RF_MODULE_CS, RF_MODULE_DIO0, RF_MODULE_RST, RF_MODULE_DIO1)
+      new Module(RTL433_RF_MODULE_CS, RTL433_RF_MODULE_DIO0, RTL433_RF_MODULE_RST, RTL433_RF_MODULE_DIO1)
 #  endif
 #endif
 
-#ifdef RF_SX1278
+#ifdef RTL433_RF_SX1278
 #  define STR_MODULE "SX1278"
-#  ifndef RF_MODULE_RECEIVER_GPIO
-#    define RF_MODULE_RECEIVER_GPIO RF_MODULE_DIO2
+#  ifndef RTL433_RF_MODULE_RECEIVER_GPIO
+#    define RTL433_RF_MODULE_RECEIVER_GPIO RTL433_RF_MODULE_DIO2
 #  endif
-#  if defined(RF_MODULE_SCK) && defined(RF_MODULE_MISO) && \
-      defined(RF_MODULE_MOSI) && defined(RF_MODULE_CS)
+#  if defined(RTL433_RF_MODULE_SCK) && defined(RTL433_RF_MODULE_MISO) && \
+      defined(RTL433_RF_MODULE_MOSI) && defined(RTL433_RF_MODULE_CS)
 #    define RADIO_LIB_MODULE                                                  \
-      new Module(RF_MODULE_CS, RF_MODULE_DIO0, RF_MODULE_RST, RF_MODULE_DIO1, \
+      new Module(RTL433_RF_MODULE_CS, RTL433_RF_MODULE_DIO0, RTL433_RF_MODULE_RST, RTL433_RF_MODULE_DIO1, \
                  newSPI)
 #  else
 #    define RADIO_LIB_MODULE                                  \
-      new Module(RF_MODULE_CS, RF_MODULE_DIO0, RF_MODULE_RST, \
-                 RF_MODULE_DIO1) // defaults from heltec_wifi_lora_32_V2
+      new Module(RTL433_RF_MODULE_CS, RTL433_RF_MODULE_DIO0, RTL433_RF_MODULE_RST, \
+                 RTL433_RF_MODULE_DIO1) // defaults from heltec_wifi_lora_32_V2
 #  endif
 #endif
 
-#ifdef RF_CC1101
-#  define RF_MODULE_RECEIVER_GPIO RF_MODULE_GDO0
+#ifdef RTL433_RF_CC1101
+#  define RTL433_RF_MODULE_RECEIVER_GPIO RTL433_RF_MODULE_GDO0
 #  define STR_MODULE              "CC1101"
-#  if defined(RF_MODULE_SCK) && defined(RF_MODULE_MISO) && \
-      defined(RF_MODULE_MOSI) && defined(RF_MODULE_CS)
+#  if defined(RTL433_RF_MODULE_SCK) && defined(RTL433_RF_MODULE_MISO) && \
+      defined(RTL433_RF_MODULE_MOSI) && defined(RTL433_RF_MODULE_CS)
 #    define RADIO_LIB_MODULE \
-      new Module(RF_MODULE_CS, RF_MODULE_GDO0, RADIOLIB_NC, RF_MODULE_GDO2, newSPI)
+      new Module(RTL433_RF_MODULE_CS, RTL433_RF_MODULE_GDO0, RADIOLIB_NC, RTL433_RF_MODULE_GDO2, newSPI)
 #  else
 #    define RADIO_LIB_MODULE \
-      new Module(SS, RF_MODULE_GDO0, RADIOLIB_NC, RF_MODULE_GDO2)
+      new Module(SS, RTL433_RF_MODULE_GDO0, RADIOLIB_NC, RTL433_RF_MODULE_GDO2)
 #  endif
 #endif
 
 /*-----------------------------  Logging Macros -----------------------------*/
 
-#ifdef REGOOKFIX_DEBUG
+#ifdef RTL433_OOK_FIXED_THRESHOLD_DEBUG
 #  define RADIOLIB_STATE(STATEVAR, FUNCTION)                              \
     {                                                                     \
       if ((STATEVAR) == RADIOLIB_ERR_NONE) {                              \
@@ -272,7 +272,7 @@ public:
 
   void setRSSIThresholdDelta(int);
 
-#if defined(RF_SX1276) || defined(RF_SX1278)
+#if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
   /**
    * Set setOOKThreshold
    *

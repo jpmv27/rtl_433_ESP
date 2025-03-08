@@ -62,7 +62,7 @@ typedef struct pulse_data {
   //
   int signalRssi;
   unsigned long signalDuration;
-#ifdef SIGNAL_RSSI
+#ifdef RTL_SIGNAL_RSSI
   int rssi[PD_MAX_PULSES];
 #endif
 

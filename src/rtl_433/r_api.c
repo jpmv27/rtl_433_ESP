@@ -527,10 +527,10 @@ int run_ook_demods(list_t* r_devs, pulse_data_t* pulse_data) {
       // Run only current priority
       if (r_dev->priority != priority)
         continue;
-#ifdef RTL_DEBUG
+#ifdef RTL433_ALL_DECODER_VERBOSE
         // logprintfLn(LOG_DEBUG, "demod(%d) - %s", r_dev->modulation, r_dev->name);
 #endif
-#ifdef RESOURCE_DEBUG
+#ifdef RTL433_RESOURCE_DEBUG
       int preStack = uxTaskGetStackHighWaterMark(NULL);
 #endif
 
@@ -572,16 +572,16 @@ int run_ook_demods(list_t* r_devs, pulse_data_t* pulse_data) {
           fprintf(stderr, "Unknown modulation %u in protocol!\n",
                   r_dev->modulation);
       }
-#ifdef RESOURCE_DEBUG
+#ifdef RTL433_RESOURCE_DEBUG
       int delta = preStack - uxTaskGetStackHighWaterMark(NULL);
       if (delta) {
         logprintfLn(LOG_DEBUG, "Process rtl_433_DecoderTask resource hit demod(%d) - %s, delta %d, stack free: %u", r_dev->modulation, r_dev->name,
                     delta, uxTaskGetStackHighWaterMark(NULL));
       }
 #endif
-#ifdef RTL_ANALYZE
+#ifdef RTL433_DECODER_ANALYZE
       // logprintfLn(LOG_DEBUG, "RTL_ANALYZE_MODEL %s==%d", r_dev->name, r_dev->protocol_num);
-      if (r_dev->protocol_num == RTL_ANALYZE) {
+      if (r_dev->protocol_num == RTL433_DECODER_ANALYZE) {
         pulse_analyzer(pulse_data, 1);
       }
 #endif
@@ -609,10 +609,10 @@ int run_fsk_demods(list_t* r_devs, pulse_data_t* fsk_pulse_data) {
       if (r_dev->priority != priority)
         continue;
 
-#ifdef RTL_DEBUG
+#ifdef RTL433_ALL_DECODER_VERBOSE
         // logprintfLn(LOG_DEBUG, "demod(%d) - %s", r_dev->modulation, r_dev->name);
 #endif
-#ifdef RESOURCE_DEBUG
+#ifdef RTL433_RESOURCE_DEBUG
       int preStack = uxTaskGetStackHighWaterMark(NULL);
 #endif
       switch (r_dev->modulation) {
@@ -641,7 +641,7 @@ int run_fsk_demods(list_t* r_devs, pulse_data_t* fsk_pulse_data) {
           fprintf(stderr, "Unknown modulation %u in protocol!\n",
                   r_dev->modulation);
       }
-#ifdef RESOURCE_DEBUG
+#ifdef RTL433_RESOURCE_DEBUG
       int delta = preStack - uxTaskGetStackHighWaterMark(NULL);
       if (delta) {
         logprintfLn(LOG_DEBUG, "Process rtl_433_DecoderTask resource hit demod(%d) - %s, delta %d, stack free: %u", r_dev->modulation, r_dev->name,
@@ -977,7 +977,7 @@ void data_acquired_handler(r_device* r_dev, data_t* data) {
               DATA_INT, cfg->demod->pulse_data.signalRssi, "duration", "",
               DATA_INT, cfg->demod->pulse_data.signalDuration, NULL);
   data_print_jsons(data, cfg->messageBuffer, cfg->bufferSize);
-#ifdef DEMOD_DEBUG
+#ifdef RTL433_DEMOD_DEBUG
   logprintfLn(LOG_INFO, "data_output %s", cfg->messageBuffer);
 #endif
 
