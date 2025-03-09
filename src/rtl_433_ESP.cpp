@@ -733,7 +733,7 @@ void rtl_433_ESP::setRSSIThreshold(int newRssiThreshold) {
  * 
  */
 #if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
-void rtl_433_ESP::setOOKThreshold(int newOokThreshold) {
+void rtl_433_ESP::setOOKFixedThreshold(int newOokThreshold) {
   ookFixedThreshold = newOokThreshold;
   Logger.notice(RTL433_LOGID, "Setting setOokFixedOrFloorThreshold to: %d",
               ookFixedThreshold);

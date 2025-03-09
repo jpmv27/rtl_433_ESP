@@ -276,11 +276,11 @@ public:
 
 #if defined(RTL433_RF_SX1276) || defined(RTL433_RF_SX1278)
   /**
-   * Set setOOKThreshold
+   * Set setOOKFixedThreshold
    *
    */
 
-  void setOOKThreshold(int);
+  void setOOKFixedThreshold(int);
 #endif
 
   /**
